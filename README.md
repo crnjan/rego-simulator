@@ -1,1 +1,1 @@
-# rego-simulator
+# Rego Simulator
