@@ -111,6 +111,12 @@ namespace RegoSimulator
                 case 0x02:
                     return ReadFromSystemRegister(address, data);
 
+                case 0x20:
+                    return ReadFromDisplay(address, data);
+
+                case 0x40:
+                    return ReadLastErrorLine(address, data);
+
                 case 0x7F:
                     return ReadRegoVersion(address, data);
 
@@ -129,6 +135,9 @@ namespace RegoSimulator
 
         private byte[] ReadFromSystemRegister(int address, int data)
         {
+            if (data != 0)
+                throw new InvalidOperationException();
+
             var value = regoMapper.ValueForAddress(address);
             if (value.HasValue == false)
                 throw new InvalidOperationException();
@@ -147,6 +156,46 @@ namespace RegoSimulator
         {
             System.Diagnostics.Debug.Assert(BitConverter.IsLittleEndian);
             return new byte[] { (byte)((value & 0xC000) >> 14), (byte)((value & 0x3F80) >> 7), (byte)(value & 0x007F) };
+        }
+
+        private byte[] ReadFromDisplay(int address, int data)
+        {
+            if (data != 0)
+                throw new InvalidOperationException();
+
+            var response = new byte[] {
+                0x01,
+                0x06, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x00
+            };
+
+            var crc = response.Skip(1).Take(40).Aggregate((a, b) => (byte)(a ^ b));
+            response[response.Length - 1] = crc;
+
+            return response;
+        }
+
+        private byte[] ReadLastErrorLine(int address, int data)
+        {
+            if (data != 0 || address != 0)
+                throw new InvalidOperationException();
+
+            var response = new byte[] {
+                0x01,
+                0x06, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
+                0x00
+            };
+
+            var crc = response.Skip(1).Take(40).Aggregate((a, b) => (byte)(a ^ b));
+            response[response.Length - 1] = crc;
+
+            return response;
         }
     }
 }
