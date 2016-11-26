@@ -8,14 +8,15 @@ namespace RegoSimulator
 {
     class RegoServer
     {
-        private const int StringMessageLength = 20;
         private readonly RegoMapper regoMapper;
+        private readonly IList<ErrorLine> errorList = new List<ErrorLine>();
         private readonly LinkedList<TcpClient> clients = new LinkedList<TcpClient>();
         private TcpListener listener;
+        private int? errorIndex;
 
         public bool IsRunning { get { return listener != null; } }
 
-        public string LastErrorLine { get; set; }
+        public IList<ErrorLine> ErrorList { get { return errorList; } }
         public bool FrontPanelLed1_Power { get; set; }
         public bool FrontPanelLed2_Pump { get; set; }
         public bool FrontPanelLed3_AdditionalHeat { get; set; }
@@ -122,11 +123,14 @@ namespace RegoSimulator
                 case 0x02:
                     return ReadFromSystemRegister(address, data);
 
-                case 0x20:
-                    return ReadFromDisplay(address, data);
+//                case 0x20:
+//                    return ReadFromDisplay(address, data);
 
                 case 0x40:
                     return ReadLastErrorLine(address, data);
+
+                case 0x41:
+                    return ReadNextErrorLine(address, data);
 
                 case 0x7F:
                     return ReadRegoVersion(address, data);
@@ -174,7 +178,7 @@ namespace RegoSimulator
             return new byte[] { (byte)((value & 0xC000) >> 14), (byte)((value & 0x3F80) >> 7), (byte)(value & 0x007F) };
         }
 
-        private static byte[] CreateStringMessage(string text)
+        /*private static byte[] CreateStringMessage(string text)
         {
             var textBytes = System.Text.Encoding.ASCII.GetBytes(text ?? "");
             var buffer = new byte[StringMessageLength * 2 + 2];
@@ -194,7 +198,7 @@ namespace RegoSimulator
             buffer[buffer.Length - 1] = crc;
 
             return buffer;
-        }
+        } */
 
         private static void WriteStringMessage(string text, byte[] buffer, int offset)
         {
@@ -209,12 +213,36 @@ namespace RegoSimulator
             }
         }
 
-        private byte[] ReadFromDisplay(int address, int data)
+        /*private byte[] ReadFromDisplay(int address, int data)
         {
             if (data != 0)
                 throw new InvalidOperationException();
 
             return CreateStringMessage("Hello from Rego600 Simulator.");
+        }*/
+
+        private static byte[] CreateResponseFromErrorLine(ErrorLine? error)
+        {
+            var payload = new byte[42];
+
+            payload[0] = 0x01;
+
+            if (error.HasValue)
+            {
+                payload[1] = error.Value.Error;
+
+                var timestampString = error.Value.Timestamp.ToString("yyMMdd HH:mm:ss");
+                WriteStringMessage(timestampString, payload, 2);
+            }
+            else
+            {
+                payload[1] = 255;   // No error
+            }
+
+            var crc = payload.Skip(1).Take(payload.Length - 2).Aggregate((a, b) => (byte)(a ^ b));
+            payload[payload.Length - 1] = crc;
+
+            return payload;
         }
 
         private byte[] ReadLastErrorLine(int address, int data)
@@ -222,17 +250,19 @@ namespace RegoSimulator
             if (data != 0 || address != 0)
                 throw new InvalidOperationException();
 
-            var payload = new byte[42];
+            var line = errorList.Count == 0 ? (ErrorLine ? )null : errorList.Last();
+            return CreateResponseFromErrorLine(line);
+        }
 
-            payload[0] = 0x01;
-            payload[1] = 21;
+        private byte[] ReadNextErrorLine(int address, int data)
+        {
+            if (data != 0 || address != 0)
+                throw new InvalidOperationException();
 
-            WriteStringMessage("090319 18:21:05", payload, 2);
+            if (errorIndex.HasValue == false)
+                throw new InvalidOperationException();
 
-            var crc = payload.Skip(1).Take(payload.Length - 2).Aggregate((a, b) => (byte)(a ^ b));
-            payload[payload.Length - 1] = crc;
-
-            return payload;
+            return null;
         }
 
         private byte[] ReadFromFrontPanel(int address, int data)

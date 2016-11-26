@@ -37,8 +37,6 @@
             this.radiatorReturnNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.outdoorNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.hotWaterNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.lastErrorLineTextBox = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.frontPanelPowerCheckBox = new System.Windows.Forms.CheckBox();
             this.frontPanelPumpCheckBox = new System.Windows.Forms.CheckBox();
             this.frontPanelAddHeatCheckBox = new System.Windows.Forms.CheckBox();
@@ -60,6 +58,14 @@
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lastErrorDateTimePicker = new System.Windows.Forms.DateTimePicker();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lastErrorCheckBox = new System.Windows.Forms.CheckBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.lastErrorErrorCodeNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.portNumericUpDown = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.forwardNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radiatorReturnNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.outdoorNumericUpDown)).BeginInit();
@@ -73,6 +79,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.roomNumericUpDown)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lastErrorErrorCodeNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.portNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -113,7 +122,7 @@
             // 
             // startButton
             // 
-            this.startButton.Location = new System.Drawing.Point(80, 348);
+            this.startButton.Location = new System.Drawing.Point(248, 325);
             this.startButton.Name = "startButton";
             this.startButton.Size = new System.Drawing.Size(75, 23);
             this.startButton.TabIndex = 8;
@@ -212,23 +221,6 @@
             this.hotWaterNumericUpDown.Name = "hotWaterNumericUpDown";
             this.hotWaterNumericUpDown.Size = new System.Drawing.Size(85, 20);
             this.hotWaterNumericUpDown.TabIndex = 12;
-            // 
-            // lastErrorLineTextBox
-            // 
-            this.lastErrorLineTextBox.Location = new System.Drawing.Point(616, 359);
-            this.lastErrorLineTextBox.Name = "lastErrorLineTextBox";
-            this.lastErrorLineTextBox.Size = new System.Drawing.Size(140, 20);
-            this.lastErrorLineTextBox.TabIndex = 13;
-            this.lastErrorLineTextBox.Text = "Dummy error description";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(529, 363);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Last error line:";
             // 
             // frontPanelPowerCheckBox
             // 
@@ -349,7 +341,7 @@
             this.coldFluidInNumericUpDown.Size = new System.Drawing.Size(85, 20);
             this.coldFluidInNumericUpDown.TabIndex = 22;
             // 
-            // heatFluidInnNumericUpDown
+            // heatFluidInNumericUpDown
             // 
             this.heatFluidInNumericUpDown.DecimalPlaces = 1;
             this.heatFluidInNumericUpDown.Increment = new decimal(new int[] {
@@ -368,11 +360,11 @@
             0,
             0,
             -2147483648});
-            this.heatFluidInNumericUpDown.Name = "heatFluidInnNumericUpDown";
+            this.heatFluidInNumericUpDown.Name = "heatFluidInNumericUpDown";
             this.heatFluidInNumericUpDown.Size = new System.Drawing.Size(85, 20);
             this.heatFluidInNumericUpDown.TabIndex = 23;
             // 
-            // heatFluidOutnumericUpDown
+            // heatFluidOutNumericUpDown
             // 
             this.heatFluidOutNumericUpDown.DecimalPlaces = 1;
             this.heatFluidOutNumericUpDown.Increment = new decimal(new int[] {
@@ -391,7 +383,7 @@
             0,
             0,
             -2147483648});
-            this.heatFluidOutNumericUpDown.Name = "heatFluidOutnumericUpDown";
+            this.heatFluidOutNumericUpDown.Name = "heatFluidOutNumericUpDown";
             this.heatFluidOutNumericUpDown.Size = new System.Drawing.Size(85, 20);
             this.heatFluidOutNumericUpDown.TabIndex = 24;
             // 
@@ -544,20 +536,115 @@
             this.groupBox2.Controls.Add(this.frontPanelWaterHeatCheckBox);
             this.groupBox2.Location = new System.Drawing.Point(226, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(158, 134);
+            this.groupBox2.Size = new System.Drawing.Size(191, 134);
             this.groupBox2.TabIndex = 35;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Front Panel";
+            // 
+            // lastErrorDateTimePicker
+            // 
+            this.lastErrorDateTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.lastErrorDateTimePicker.Location = new System.Drawing.Point(77, 68);
+            this.lastErrorDateTimePicker.Name = "lastErrorDateTimePicker";
+            this.lastErrorDateTimePicker.Size = new System.Drawing.Size(110, 20);
+            this.lastErrorDateTimePicker.TabIndex = 36;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label14);
+            this.groupBox3.Controls.Add(this.lastErrorErrorCodeNumericUpDown);
+            this.groupBox3.Controls.Add(this.label13);
+            this.groupBox3.Controls.Add(this.lastErrorCheckBox);
+            this.groupBox3.Controls.Add(this.lastErrorDateTimePicker);
+            this.groupBox3.Location = new System.Drawing.Point(226, 152);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(191, 97);
+            this.groupBox3.TabIndex = 37;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Error Log";
+            // 
+            // lastErrorCheckBox
+            // 
+            this.lastErrorCheckBox.AutoSize = true;
+            this.lastErrorCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.lastErrorCheckBox.Name = "lastErrorCheckBox";
+            this.lastErrorCheckBox.Size = new System.Drawing.Size(65, 17);
+            this.lastErrorCheckBox.TabIndex = 37;
+            this.lastErrorCheckBox.Text = "Enabled";
+            this.lastErrorCheckBox.UseVisualStyleBackColor = true;
+            this.lastErrorCheckBox.CheckedChanged += new System.EventHandler(this.lastErrorCheckBox_CheckedChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(6, 72);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(61, 13);
+            this.label13.TabIndex = 38;
+            this.label13.Text = "Timestamp:";
+            // 
+            // lastErrorErrorCodeNumericUpDown
+            // 
+            this.lastErrorErrorCodeNumericUpDown.Location = new System.Drawing.Point(77, 42);
+            this.lastErrorErrorCodeNumericUpDown.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.lastErrorErrorCodeNumericUpDown.Name = "lastErrorErrorCodeNumericUpDown";
+            this.lastErrorErrorCodeNumericUpDown.Size = new System.Drawing.Size(110, 20);
+            this.lastErrorErrorCodeNumericUpDown.TabIndex = 39;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 46);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(59, 13);
+            this.label14.TabIndex = 40;
+            this.label14.Text = "Error code:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 329);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 13);
+            this.label5.TabIndex = 38;
+            this.label5.Text = "Port:";
+            // 
+            // portNumericUpDown
+            // 
+            this.portNumericUpDown.Location = new System.Drawing.Point(58, 325);
+            this.portNumericUpDown.Maximum = new decimal(new int[] {
+            60000,
+            0,
+            0,
+            0});
+            this.portNumericUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.portNumericUpDown.Name = "portNumericUpDown";
+            this.portNumericUpDown.Size = new System.Drawing.Size(120, 20);
+            this.portNumericUpDown.TabIndex = 39;
+            this.portNumericUpDown.Value = new decimal(new int[] {
+            9265,
+            0,
+            0,
+            0});
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(876, 426);
+            this.ClientSize = new System.Drawing.Size(419, 365);
+            this.Controls.Add(this.portNumericUpDown);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.lastErrorLineTextBox);
             this.Controls.Add(this.startButton);
             this.Name = "MainForm";
             this.Text = "Rego Simulator";
@@ -576,6 +663,10 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.lastErrorErrorCodeNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.portNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -591,8 +682,6 @@
         private System.Windows.Forms.NumericUpDown radiatorReturnNumericUpDown;
         private System.Windows.Forms.NumericUpDown outdoorNumericUpDown;
         private System.Windows.Forms.NumericUpDown hotWaterNumericUpDown;
-        private System.Windows.Forms.TextBox lastErrorLineTextBox;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox frontPanelPowerCheckBox;
         private System.Windows.Forms.CheckBox frontPanelPumpCheckBox;
         private System.Windows.Forms.CheckBox frontPanelAddHeatCheckBox;
@@ -614,6 +703,14 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DateTimePicker lastErrorDateTimePicker;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.NumericUpDown lastErrorErrorCodeNumericUpDown;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.CheckBox lastErrorCheckBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown portNumericUpDown;
     }
 }
 

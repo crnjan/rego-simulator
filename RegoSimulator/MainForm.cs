@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RegoSimulator
@@ -26,7 +19,12 @@ namespace RegoSimulator
                 Outdoor = -5.2,
                 HotWater = 39.2,
                 Forward = 30.1,
-                Room = 22.7
+                Room = 22.7,
+                Compressor = 64.3,
+                ColdFluidIn = 14.6,
+                ColdFluidOut = 10.9,
+                HeatFluidIn = 28.1,
+                HeatFluidOut = 37.9
             };
                 
             simulator = new RegoServer(RegoMapper.CreateRego600Mapper(registers));
@@ -50,9 +48,6 @@ namespace RegoSimulator
             frontPanelAddHeatCheckBox.DataBindings.Add("Checked", simulator, "FrontPanelLed3_AdditionalHeat", true, DataSourceUpdateMode.OnPropertyChanged);
             frontPanelWaterHeatCheckBox.DataBindings.Add("Checked", simulator, "FrontPanelLed4_WaterHeat", true, DataSourceUpdateMode.OnPropertyChanged);
             frontPanelAlarmCheckBox.DataBindings.Add("Checked", simulator, "FrontPanelLed5_Alarm", true, DataSourceUpdateMode.OnPropertyChanged);
-
-            // Error log
-            lastErrorLineTextBox.DataBindings.Add("Text", simulator, "LastErrorLine", true, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void startButton_Click(object sender, EventArgs e)
@@ -65,7 +60,20 @@ namespace RegoSimulator
             else
             {
                 startButton.Text = "Stop";
-                simulator.Start(9265);
+                simulator.Start((int)portNumericUpDown.Value);
+            }
+        }
+
+        private void lastErrorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            simulator.ErrorList.Clear();
+            if (lastErrorCheckBox.Checked)
+            {
+                simulator.ErrorList.Add(new ErrorLine
+                {
+                    Error = (byte)lastErrorErrorCodeNumericUpDown.Value,
+                    Timestamp = lastErrorDateTimePicker.Value
+                });
             }
         }
     }
