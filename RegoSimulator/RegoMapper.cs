@@ -30,7 +30,13 @@ namespace RegoSimulator
                 { 0x020A, () => registers.Outdoor },
                 { 0x020B, () => registers.HotWater },
                 { 0x020C, () => registers.Forward },
-                { 0x020D, () => registers.Room }
+                { 0x020D, () => registers.Room },
+                { 0x020E, () => registers.Compressor },
+                { 0x020F, () => registers.HeatFluidOut },
+                { 0x0210, () => registers.HeatFluidIn },
+                { 0x0211, () => registers.ColdFluidIn },
+                { 0x0212, () => registers.ColdFluidOut},
+                { 0x0213, () => registers.ExternalHotWater }
             };
 
             return new RegoMapper(mapper);

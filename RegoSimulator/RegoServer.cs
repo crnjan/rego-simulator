@@ -8,11 +8,19 @@ namespace RegoSimulator
 {
     class RegoServer
     {
+        private const int StringMessageLength = 20;
         private readonly RegoMapper regoMapper;
         private readonly LinkedList<TcpClient> clients = new LinkedList<TcpClient>();
         private TcpListener listener;
 
         public bool IsRunning { get { return listener != null; } }
+
+        public string LastErrorLine { get; set; }
+        public bool FrontPanelLed1_Power { get; set; }
+        public bool FrontPanelLed2_Pump { get; set; }
+        public bool FrontPanelLed3_AdditionalHeat { get; set; }
+        public bool FrontPanelLed4_WaterHeat { get; set; }
+        public bool FrontPanelLed5_Alarm { get; set; }
 
 
         public RegoServer(RegoMapper regoMapper)
@@ -108,6 +116,9 @@ namespace RegoSimulator
 
             switch (command)
             {
+                case 0x00:
+                    return ReadFromFrontPanel(address, data);
+
                 case 0x02:
                     return ReadFromSystemRegister(address, data);
 
@@ -142,7 +153,12 @@ namespace RegoSimulator
             if (value.HasValue == false)
                 throw new InvalidOperationException();
 
-            var dataBytes = ConvertFromShort((Int16)(value.Value * 10));
+            return CreateShortResponse((Int16)(value.Value * 10));
+        }
+
+        private byte[] CreateShortResponse(short data)
+        {
+            var dataBytes = ConvertFromShort(data);
             return new byte[] { 0x01, dataBytes[0], dataBytes[1], dataBytes[2], dataBytes.Aggregate((a, b) => (byte)(a ^ b)) };
         }
 
@@ -158,24 +174,47 @@ namespace RegoSimulator
             return new byte[] { (byte)((value & 0xC000) >> 14), (byte)((value & 0x3F80) >> 7), (byte)(value & 0x007F) };
         }
 
+        private static byte[] CreateStringMessage(string text)
+        {
+            var textBytes = System.Text.Encoding.ASCII.GetBytes(text ?? "");
+            var buffer = new byte[StringMessageLength * 2 + 2];
+
+            buffer[0] = 0x01;
+
+            for (int i = 0; i < StringMessageLength; ++i)
+            {
+                int ascii = i < textBytes.Length ? textBytes[i] : 0x20;
+                int index = 1 + 2 * i;
+
+                buffer[index] = (byte)((ascii & 0xf0) >> 4);
+                buffer[index + 1] = (byte)(ascii & 0x0f);
+            }
+
+            var crc = buffer.Skip(1).Take(StringMessageLength * 2).Aggregate((a, b) => (byte)(a ^ b));
+            buffer[buffer.Length - 1] = crc;
+
+            return buffer;
+        }
+
+        private static void WriteStringMessage(string text, byte[] buffer, int offset)
+        {
+            var textBytes = System.Text.Encoding.ASCII.GetBytes(text);
+            for (int i = 0; i < textBytes.Length; ++i)
+            {
+                int ascii = textBytes[i];
+                int index = offset + 2 * i;
+
+                buffer[index] = (byte)((ascii & 0xf0) >> 4);
+                buffer[index + 1] = (byte)(ascii & 0x0f);
+            }
+        }
+
         private byte[] ReadFromDisplay(int address, int data)
         {
             if (data != 0)
                 throw new InvalidOperationException();
 
-            var response = new byte[] {
-                0x01,
-                0x06, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x00
-            };
-
-            var crc = response.Skip(1).Take(40).Aggregate((a, b) => (byte)(a ^ b));
-            response[response.Length - 1] = crc;
-
-            return response;
+            return CreateStringMessage("Hello from Rego600 Simulator.");
         }
 
         private byte[] ReadLastErrorLine(int address, int data)
@@ -183,19 +222,36 @@ namespace RegoSimulator
             if (data != 0 || address != 0)
                 throw new InvalidOperationException();
 
-            var response = new byte[] {
-                0x01,
-                0x06, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x05, 0x02, 0x06, 0x05, 0x06, 0x07, 0x06, 0x0F, 0x03, 0x06,
-                0x00
-            };
+            var payload = new byte[42];
 
-            var crc = response.Skip(1).Take(40).Aggregate((a, b) => (byte)(a ^ b));
-            response[response.Length - 1] = crc;
+            payload[0] = 0x01;
+            payload[1] = 21;
 
-            return response;
+            WriteStringMessage("090319 18:21:05", payload, 2);
+
+            var crc = payload.Skip(1).Take(payload.Length - 2).Aggregate((a, b) => (byte)(a ^ b));
+            payload[payload.Length - 1] = crc;
+
+            return payload;
+        }
+
+        private byte[] ReadFromFrontPanel(int address, int data)
+        {
+            if (data != 0)
+                throw new InvalidOperationException();
+
+            bool value;
+            switch (address)
+            {
+                case 0x0012: value = FrontPanelLed1_Power; break;
+                case 0x0013: value = FrontPanelLed2_Pump; break;
+                case 0x0014: value = FrontPanelLed3_AdditionalHeat; break;
+                case 0x0015: value = FrontPanelLed4_WaterHeat; break;
+                case 0x0016: value = FrontPanelLed5_Alarm; break;
+                default: throw new InvalidOperationException();
+            }
+
+            return CreateShortResponse((short)(value ? 1 : 0));
         }
     }
 }
