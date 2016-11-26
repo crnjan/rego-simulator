@@ -139,11 +139,6 @@
             0,
             65536});
             this.forwardNumericUpDown.Location = new System.Drawing.Point(117, 90);
-            this.forwardNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.forwardNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -162,11 +157,6 @@
             0,
             65536});
             this.radiatorReturnNumericUpDown.Location = new System.Drawing.Point(117, 12);
-            this.radiatorReturnNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.radiatorReturnNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -185,11 +175,6 @@
             0,
             65536});
             this.outdoorNumericUpDown.Location = new System.Drawing.Point(117, 38);
-            this.outdoorNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.outdoorNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -208,11 +193,6 @@
             0,
             65536});
             this.hotWaterNumericUpDown.Location = new System.Drawing.Point(117, 64);
-            this.hotWaterNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.hotWaterNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -281,11 +261,6 @@
             0,
             65536});
             this.externalHotWaterNumericUpDown.Location = new System.Drawing.Point(117, 272);
-            this.externalHotWaterNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.externalHotWaterNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -304,11 +279,6 @@
             0,
             65536});
             this.coldFluidOutNumericUpDown.Location = new System.Drawing.Point(117, 246);
-            this.coldFluidOutNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.coldFluidOutNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -327,11 +297,6 @@
             0,
             65536});
             this.coldFluidInNumericUpDown.Location = new System.Drawing.Point(117, 220);
-            this.coldFluidInNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.coldFluidInNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -350,11 +315,6 @@
             0,
             65536});
             this.heatFluidInNumericUpDown.Location = new System.Drawing.Point(117, 194);
-            this.heatFluidInNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.heatFluidInNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -373,11 +333,6 @@
             0,
             65536});
             this.heatFluidOutNumericUpDown.Location = new System.Drawing.Point(117, 168);
-            this.heatFluidOutNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.heatFluidOutNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -396,11 +351,6 @@
             0,
             65536});
             this.compressorNumericUpDown.Location = new System.Drawing.Point(117, 142);
-            this.compressorNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.compressorNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
@@ -419,11 +369,6 @@
             0,
             65536});
             this.roomNumericUpDown.Location = new System.Drawing.Point(117, 116);
-            this.roomNumericUpDown.Maximum = new decimal(new int[] {
-            60,
-            0,
-            0,
-            0});
             this.roomNumericUpDown.Minimum = new decimal(new int[] {
             50,
             0,
