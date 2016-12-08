@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Windows.Forms;
 
 namespace RegoSimulator
@@ -60,7 +61,9 @@ namespace RegoSimulator
             else
             {
                 startButton.Text = "Stop";
-                simulator.Start((int)portNumericUpDown.Value);
+
+                var server = new Comm.TcpListenerWrapper(new TcpListener((int)portNumericUpDown.Value));
+                simulator.Start(server);
             }
         }
 

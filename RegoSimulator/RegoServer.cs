@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Linq;
-using System.Net.Sockets;
 using System.Collections.Generic;
 
 namespace RegoSimulator
@@ -10,8 +9,8 @@ namespace RegoSimulator
     {
         private readonly RegoMapper regoMapper;
         private readonly IList<ErrorLine> errorList = new List<ErrorLine>();
-        private readonly LinkedList<TcpClient> clients = new LinkedList<TcpClient>();
-        private TcpListener listener;
+        private readonly LinkedList<Comm.IClient> clients = new LinkedList<Comm.IClient>();
+        private Comm.IServer listener;
         private int? errorIndex;
 
         public bool IsRunning { get { return listener != null; } }
@@ -29,12 +28,12 @@ namespace RegoSimulator
             this.regoMapper = regoMapper;
         }
 
-        public void Start(int port)
+        public void Start(Comm.IServer listener)
         {
-            if (listener != null)
-                return;
+            if (this.listener != null)
+                throw new InvalidOperationException();
 
-            listener = new TcpListener(IPAddress.Any, port);
+            this.listener = listener;
             listener.Start();
 
             ProcessIncommingConnections();
@@ -56,7 +55,7 @@ namespace RegoSimulator
             }
         }
 
-        private async void ProcessClientRequests(TcpClient client)
+        private async void ProcessClientRequests(Comm.IClient client)
         {
             const int commandLength = 9;
 
@@ -155,7 +154,10 @@ namespace RegoSimulator
 
             var value = regoMapper.ValueForAddress(address);
             if (value.HasValue == false)
-                throw new InvalidOperationException();
+            {
+                //throw new InvalidOperationException();
+                return CreateShortResponse((short)address);
+            }
 
             return CreateShortResponse((Int16)(value.Value * 10));
         }
