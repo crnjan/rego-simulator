@@ -62,7 +62,8 @@ namespace RegoSimulator
             {
                 startButton.Text = "Stop";
 
-                var server = new Comm.TcpListenerWrapper(new TcpListener((int)portNumericUpDown.Value));
+                //                var server = new Comm.TcpListenerWrapper(new TcpListener((int)portNumericUpDown.Value));
+                var server = new Comm.SerialServer();
                 simulator.Start(server);
             }
         }

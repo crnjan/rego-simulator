@@ -68,17 +68,22 @@ namespace RegoSimulator
                 {
                     while (true)
                     {
-                        var len = await stream.ReadAsync(buffer, 0, commandLength);
-                        if (len != commandLength)
-                            throw new InvalidOperationException();
+                        int pos = 0;
+                        while (pos < commandLength)
+                        {
+                            var len = await stream.ReadAsync(buffer, pos, commandLength - pos);
+                            if (len <= 0)
+                                throw new InvalidOperationException();
+
+                            pos += len;
+                        }
 
                         if (buffer[0] != 0x81)
                             throw new InvalidOperationException();
 
-                        await System.Threading.Tasks.Task.Delay(40);
-
                         var response = ProcessCommand(buffer);
                         await stream.WriteAsync(response, 0, response.Length);
+                        await stream.FlushAsync();
                     }
                 }
             }

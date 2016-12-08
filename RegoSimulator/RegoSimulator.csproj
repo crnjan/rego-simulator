@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comm\SerialClient.cs" />
+    <Compile Include="Comm\SerialServer.cs" />
     <Compile Include="ErrorLine.cs" />
     <Compile Include="Comm\IClient.cs" />
     <Compile Include="Comm\IServer.cs" />
